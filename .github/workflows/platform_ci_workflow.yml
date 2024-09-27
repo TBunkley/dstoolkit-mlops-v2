@@ -66,97 +66,97 @@ jobs:
           echo $metadata
           echo "RUN_METADATA=${metadata}"  >> "$GITHUB_ENV"
 
-  deploy-online:
-    name: Deploy_Online
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    needs: [execute-training-job]
-    steps:
-      - name: Checkout Actions
-        uses: actions/checkout@v1
-      - name: Configure Azure ML Agent
-        uses: ./.github/actions/configure_azureml_agent
-      - name: Provision azureml online endpoint
-        uses: ./.github/actions/execute_shell_code
-        with:
-            arm_client_id: ${{ env.ARM_CLIENT_ID }}
-            arm_tenant_id: ${{ env.ARM_TENANT_ID }}
-            subscription_id: ${{ env.SUBSCRIPTION_ID }}
-            script_parameter: |
-                python -m mlops.common.deployment.provision_online_endpoint \
-                  --model_type ${{ inputs.model_type }} \
-                  --environment_name ${{ inputs.exec_environment }} \
-                  --run_id ${{ github.run_id }} 
-      - name: Provision azureml deployment
-        uses: ./.github/actions/execute_shell_code
-        with: 
-            arm_client_id: ${{ env.ARM_CLIENT_ID }}
-            arm_tenant_id: ${{ env.ARM_TENANT_ID }}
-            subscription_id: ${{ env.SUBSCRIPTION_ID }}
-            script_parameter: |
-                python -m mlops.common.deployment.provision_online_deployment \
-                  --model_type ${{ inputs.model_type }} \
-                  --environment_name ${{ inputs.exec_environment }} \
-                  --run_id ${{ github.run_id }}
-      - name: Test azureml real endpoint
-        uses: ./.github/actions/execute_shell_code
-        with:
-            arm_client_id: ${{ env.ARM_CLIENT_ID }}
-            arm_tenant_id: ${{ env.ARM_TENANT_ID }}
-            subscription_id: ${{ env.SUBSCRIPTION_ID }}
-            script_parameter: |
-                python -m mlops.common.deployment.run_test_model_on_aml \
-                    --environment_name ${{ inputs.exec_environment }} \
-                    --model_type ${{ inputs.model_type }}
+  # deploy-online:
+  #   name: Deploy_Online
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   needs: [execute-training-job]
+  #   steps:
+  #     - name: Checkout Actions
+  #       uses: actions/checkout@v1
+  #     - name: Configure Azure ML Agent
+  #       uses: ./.github/actions/configure_azureml_agent
+  #     - name: Provision azureml online endpoint
+  #       uses: ./.github/actions/execute_shell_code
+  #       with:
+  #           arm_client_id: ${{ env.ARM_CLIENT_ID }}
+  #           arm_tenant_id: ${{ env.ARM_TENANT_ID }}
+  #           subscription_id: ${{ env.SUBSCRIPTION_ID }}
+  #           script_parameter: |
+  #               python -m mlops.common.deployment.provision_online_endpoint \
+  #                 --model_type ${{ inputs.model_type }} \
+  #                 --environment_name ${{ inputs.exec_environment }} \
+  #                 --run_id ${{ github.run_id }} 
+  #     - name: Provision azureml deployment
+  #       uses: ./.github/actions/execute_shell_code
+  #       with: 
+  #           arm_client_id: ${{ env.ARM_CLIENT_ID }}
+  #           arm_tenant_id: ${{ env.ARM_TENANT_ID }}
+  #           subscription_id: ${{ env.SUBSCRIPTION_ID }}
+  #           script_parameter: |
+  #               python -m mlops.common.deployment.provision_online_deployment \
+  #                 --model_type ${{ inputs.model_type }} \
+  #                 --environment_name ${{ inputs.exec_environment }} \
+  #                 --run_id ${{ github.run_id }}
+  #     - name: Test azureml real endpoint
+  #       uses: ./.github/actions/execute_shell_code
+  #       with:
+  #           arm_client_id: ${{ env.ARM_CLIENT_ID }}
+  #           arm_tenant_id: ${{ env.ARM_TENANT_ID }}
+  #           subscription_id: ${{ env.SUBSCRIPTION_ID }}
+  #           script_parameter: |
+  #               python -m mlops.common.deployment.run_test_model_on_aml \
+  #                   --environment_name ${{ inputs.exec_environment }} \
+  #                   --model_type ${{ inputs.model_type }}
 
-  deploy-batch:
-    name: Deploy_Batch
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    needs: [execute-training-job]
-    steps:
-      - name: Checkout Actions
-        uses: actions/checkout@v1
-      - name: Configure Azure ML Agent
-        uses: ./.github/actions/configure_azureml_agent
-      - name: Provision azureml online endpoint
-        uses: ./.github/actions/execute_shell_code
-        with:
-            arm_client_id: ${{ env.ARM_CLIENT_ID }}
-            arm_tenant_id: ${{ env.ARM_TENANT_ID }}
-            subscription_id: ${{ env.SUBSCRIPTION_ID }}
-            script_parameter: |
-                python -m mlops.common.deployment.provision_batch_endpoint \
-                  --run_id ${{ github.run_id }} \
-                  --environment_name ${{ inputs.exec_environment }} \
-                  --model_type ${{ inputs.model_type }}
-      - name: Wait for 180 seconds
-        run: sleep 180
-      - name: Provision azureml deployment
-        uses: ./.github/actions/execute_shell_code
-        with:
-            arm_client_id: ${{ env.ARM_CLIENT_ID }}
-            arm_tenant_id: ${{ env.ARM_TENANT_ID }}
-            subscription_id: ${{ env.SUBSCRIPTION_ID }}
-            script_parameter: |
-                python -m mlops.common.deployment.provision_batch_deployment \
-                  --run_id ${{ github.run_id }} \
-                  --environment_name ${{ inputs.exec_environment }} \
-                  --model_type ${{ inputs.model_type }}
-      - name: Test azureml batch endpoint
-        uses: ./.github/actions/execute_shell_code
-        with:
-            arm_client_id: ${{ env.ARM_CLIENT_ID }}
-            arm_tenant_id: ${{ env.ARM_TENANT_ID }}
-            subscription_id: ${{ env.SUBSCRIPTION_ID }}
-            script_parameter: |
-                python -m mlops.common.deployment.run_test_batch_deployment \
-                  --environment_name ${{ inputs.exec_environment }} \
-                  --model_type ${{ inputs.model_type }}
+  # deploy-batch:
+  #   name: Deploy_Batch
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   needs: [execute-training-job]
+  #   steps:
+  #     - name: Checkout Actions
+  #       uses: actions/checkout@v1
+  #     - name: Configure Azure ML Agent
+  #       uses: ./.github/actions/configure_azureml_agent
+  #     - name: Provision azureml online endpoint
+  #       uses: ./.github/actions/execute_shell_code
+  #       with:
+  #           arm_client_id: ${{ env.ARM_CLIENT_ID }}
+  #           arm_tenant_id: ${{ env.ARM_TENANT_ID }}
+  #           subscription_id: ${{ env.SUBSCRIPTION_ID }}
+  #           script_parameter: |
+  #               python -m mlops.common.deployment.provision_batch_endpoint \
+  #                 --run_id ${{ github.run_id }} \
+  #                 --environment_name ${{ inputs.exec_environment }} \
+  #                 --model_type ${{ inputs.model_type }}
+  #     - name: Wait for 180 seconds
+  #       run: sleep 180
+  #     - name: Provision azureml deployment
+  #       uses: ./.github/actions/execute_shell_code
+  #       with:
+  #           arm_client_id: ${{ env.ARM_CLIENT_ID }}
+  #           arm_tenant_id: ${{ env.ARM_TENANT_ID }}
+  #           subscription_id: ${{ env.SUBSCRIPTION_ID }}
+  #           script_parameter: |
+  #               python -m mlops.common.deployment.provision_batch_deployment \
+  #                 --run_id ${{ github.run_id }} \
+  #                 --environment_name ${{ inputs.exec_environment }} \
+  #                 --model_type ${{ inputs.model_type }}
+  #     - name: Test azureml batch endpoint
+  #       uses: ./.github/actions/execute_shell_code
+  #       with:
+  #           arm_client_id: ${{ env.ARM_CLIENT_ID }}
+  #           arm_tenant_id: ${{ env.ARM_TENANT_ID }}
+  #           subscription_id: ${{ env.SUBSCRIPTION_ID }}
+  #           script_parameter: |
+  #               python -m mlops.common.deployment.run_test_batch_deployment \
+  #                 --environment_name ${{ inputs.exec_environment }} \
+  #                 --model_type ${{ inputs.model_type }}
 
   change_model_tag:
     name: Apply Production Tag
