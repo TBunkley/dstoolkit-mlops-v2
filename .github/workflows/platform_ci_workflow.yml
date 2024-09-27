@@ -11,6 +11,17 @@ on:
         type: string
         description: "type of model to execute"
         required: true
+  workflow_dispatch:
+    inputs:
+      exec_environment:
+        type: string
+        description: "Execution Environment"
+        required: true
+        default: "dev"
+      model_type:
+        type: string
+        description: "type of model to execute"
+        required: true
 env:
   SUBSCRIPTION_ID: ${{vars.SUBSCRIPTION_ID}}
   RESOURCE_GROUP_NAME: ${{ vars.RESOURCE_GROUP_NAME }}
