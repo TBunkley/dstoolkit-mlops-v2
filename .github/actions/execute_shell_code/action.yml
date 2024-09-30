@@ -23,11 +23,10 @@ runs:
     - name: Azure login
       uses: azure/login@v2
       with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
         # client-id: ${{ inputs.arm_client_id }}
         # tenant-id: ${{ inputs.arm_tenant_id }}
         # subscription-id: ${{ inputs.subscription_id }}
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
     - name: Checkout
       uses: actions/checkout@v1
 
